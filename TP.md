@@ -160,11 +160,23 @@ Les paramètre requis pour wp-config.php sont: DB_NAME, DB_USER, DB_PASSWORD, DB
    > Exécution de la commande pour voir un conteneur basé sur l'image :docker run -it --rm my-custom-wordpress:latest /bin/bash
    > Exéution de la commande pour voir le password: echo $WORDPRESS_DB_PASSWORD
    ilovedevops
-   
+
 6. Pipeline d'Intégration Continue (CI):
    1. Créer un dépôt de type `DOCKER` sur artifact registry (si pas déjà fait, sinon utiliser celui appelé `website-tools`)
+   Voir image sur le fichier google doc
+
    2. Créer une configuration cloudbuild pour construire l'image docker et la publier sur le depôt Artifact Registry
+   Voir le fichier cloudbuild.yaml
+
    3. Envoyer (`submit`) le job sur Cloud Build et vérifier que l'image a bien été créée
+   > Exécution de la commande : gcloud builds submit --config cloudbuild.yaml .
+
+   ID: 98838524-a5ee-4a18-b99b-6ed54b6b4666
+CREATE_TIME: 2025-01-30T09:17:25+00:00
+DURATION: 36S
+SOURCE: gs://vital-charger-424406-u2_cloudbuild/source/1738228642.452115-0314c472f2a74ef982b60745b0232b72.tgz
+IMAGES: us-central1-docker.pkg.dev/vital-charger-424406-u2/website-tools/my-wordpress (+1 more)
+STATUS: SUCCESS
 
 ## Partie 3 : Déployer Wordpress sur Cloud Run puis Kubernetes 🔥
 

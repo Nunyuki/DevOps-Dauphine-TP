@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  script: |
+    docker build -t us-central1-docker.pkg.dev/vital-charger-424406-u2/website-tools/my-wordpress .
+  automapSubstitutions: true
+images:
+- 'us-central1-docker.pkg.dev/vital-charger-424406-u2/website-tools/my-wordpress'
