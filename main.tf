@@ -42,3 +42,40 @@ resource "google_sql_user" "wordpress" {
    instance = "main-instance"
    password = "ilovedevops"
 }
+
+data "google_iam_policy" "noauth" {
+   binding {
+      role = "roles/run.invoker"
+      members = [
+         "allUsers",
+      ]
+   }
+}
+
+# Définition de la politique IAM pour Cloud Run
+resource "google_cloud_run_service_iam_policy" "noauth" {
+  location = "us-central1" 
+  project  = "vital-charger-424406-u2" 
+  service  = "wordpress-service"
+
+  policy_data = data.google_iam_policy.noauth.policy_data
+}
+
+resource "google_cloud_run_service" "wordpress" { 
+    name = "wordpress-service"
+    location = "us-central1" 
+    template { 
+        spec { 
+            containers { 
+                image = "us-central1-docker.pkg.dev/vital-charger-424406-u2/website-tools/my-wordpress" 
+                ports { 
+                    container_port = 80 
+                } 
+            } 
+        } 
+    } 
+    traffic { 
+        percent = 100 
+        latest_revision = true 
+    } 
+}
