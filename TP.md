@@ -81,24 +81,56 @@ Voir image sur google doc
 Wordpress dispose d'une image Docker officielle disponible sur [DockerHub](https://hub.docker.com/_/wordpress)
 
 1. Récupérer l'image sur votre machine (Cloud Shell)
+> Exécutionn de la commande
+docker pull wordpress
+Voir image sur google doc.
+
 
 2. Lancer l'image docker et ouvrez un shell à l'intérieur de votre container:
    1. Quel est le répertoire courant du container (WORKDIR) ?
+> Exécution de la commande docker run -d -p 8000:80 --name wordpress-cont wordpress:latest
+ad4ba32c2ff7565b06c650ee35f33f1773defce6d9f23c57f7a2f0b31d143a71
+> Exécution de la commande  wordpress-cont bash
+root@ad4ba32c2ff7:/var/www/html# 
+
    2. Quelles sont les différents fichiers html contenu dans WORKDIR ?
+> Exécution de la commande ls *.html
+readme.html
 
 3. Supprimez le container puis relancez en un en spécifiant un port binding (une correspondance de port).
+> Exécution de la commande pour récupérer l'id du container à supprimer : docker ps
+CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS         PORTS                  NAMES
+ad4ba32c2ff7   wordpress:latest   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes   0.0.0.0:8000->80/tcp   wordpress-cont
+> Exécution de la commande de suppression: docker rm -f ad4
+ad4
 
    1. Vous devez pouvoir communiquer avec le port par défaut de wordpress : **80** (choisissez un port entre 8000 et 9000 sur votre machine hôte => cloudshell)
+   > Exécution de la commande : docker run -d -p 8080:80 wordpress:latest
+   e5a16f1043ed6fa70c02d4817b4067fb540f15a55fd0913315cd8cd9e639dfa3
 
    2. Avec la commande `curl`, faites une requêtes depuis votre machine hôte à votre container wordpress. Quelle est la réponse ? (il n'y a pas piège, essayez sur un port non utilisé pour constater la différence)
+   > Exécution de la commande : curl http://localhost:8080
+   Rien ne se produit
+   > Exécution de la commande : curl http://localhost:8040
+   La connexion a échouée 
+   curl: (7) Failed to connect to localhost port 8040 after 0 ms: Couldn't connect to server
 
    3. Afficher les logs de votre container après avoir fait quelques requêtes, que voyez vous ?
+   > Exécution de la commande pour récupérer le container id: docker ps
+   CONTAINER ID   IMAGE              COMMAND                  CREATED         STATUS         PORTS                  NAMES
+   e5a16f1043ed   wordpress:latest   "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:8080->80/tcp   practical_snyder
+   > Exécution de la commande: docker logs e5a
+
    4. Utilisez l'aperçu web pour afficher le résultat du navigateur qui se connecte à votre container wordpress
       1. Utiliser la fonction `Aperçu sur le web`
         ![web_preview](images/wordpress_preview.png)
-      2. Modifier le port si celui choisi n'est pas `8000`
-      3. Une fenètre s'ouvre, que voyez vous ?
+        Voir image sur le fichier google doc
 
+      2. Modifier le port si celui choisi n'est pas `8000`
+         Voir image sur le fichier google doc
+      3. Une fenètre s'ouvre, que voyez vous ?
+         Voir image sur le fichier google doc
+         
 4. A partir de la documentation, remarquez les paramètres requis pour la configuration de la base de données.
 
 5. Dans la partie 1 du TP (si pas déjà fait), nous allons créer cette base de donnée. Dans cette partie 2 nous allons créer une image docker qui utilise des valeurs spécifiques de paramètres pour la base de données.
