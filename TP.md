@@ -130,19 +130,37 @@ ad4
          Voir image sur le fichier google doc
       3. Une fenètre s'ouvre, que voyez vous ?
          Voir image sur le fichier google doc
-         
+
 4. A partir de la documentation, remarquez les paramètres requis pour la configuration de la base de données.
+Les paramètre requis pour wp-config.php sont: DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_CHARSET, DB_COLLATE 
 
 5. Dans la partie 1 du TP (si pas déjà fait), nous allons créer cette base de donnée. Dans cette partie 2 nous allons créer une image docker qui utilise des valeurs spécifiques de paramètres pour la base de données.
    1. Créer un Dockerfile
+> Exécution de la commande pour ouvrir un nouveau fichier : nano Dockerfile
+
    2. Spécifier les valeurs suivantes pour la base de données à l'aide de l'instruction `ENV` (voir [ici](https://stackoverflow.com/questions/57454581/define-environment-variable-in-dockerfile-or-docker-compose)):
         - `WORDPRESS_DB_USER=wordpress`
         - `WORDPRESS_DB_PASSWORD=ilovedevops`
         - `WORDPRESS_DB_NAME=wordpress`
         - `WORDPRESS_DB_HOST=0.0.0.0`
-   3. Construire l'image docker.
-   4. Lancer une instance de l'image, ouvrez un shell. Vérifier le résultat de la commande `echo $WORDPRESS_DB_PASSWORD`
+      Ajout du contenu suivant:
+      > Contenu à mettre après dans la commande:
+      FROM wordpress:latest
 
+      ENV WORDPRESS_DB_HOST=0.0.0.0
+      ENV WORDPRESS_DB_USER=wordpress
+      ENV WORDPRESS_DB_PASSWORD=ilovedevops
+      ENV WORDPRESS_DB_NAME=wordpress
+   
+   3. Construire l'image docker.
+   docker build -t my-custom-wordpress:latest .
+   Un warning pour les contenus sensibles comme les passwords
+
+   4. Lancer une instance de l'image, ouvrez un shell. Vérifier le résultat de la commande `echo $WORDPRESS_DB_PASSWORD`
+   > Exécution de la commande pour voir un conteneur basé sur l'image :docker run -it --rm my-custom-wordpress:latest /bin/bash
+   > Exéution de la commande pour voir le password: echo $WORDPRESS_DB_PASSWORD
+   ilovedevops
+   
 6. Pipeline d'Intégration Continue (CI):
    1. Créer un dépôt de type `DOCKER` sur artifact registry (si pas déjà fait, sinon utiliser celui appelé `website-tools`)
    2. Créer une configuration cloudbuild pour construire l'image docker et la publier sur le depôt Artifact Registry
