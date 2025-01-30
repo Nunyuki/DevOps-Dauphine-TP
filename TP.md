@@ -1,4 +1,4 @@
-# TP 6
+# TP 6 - go
 
 ![wordpress-logo](images/wordpress-logo.png)
 
