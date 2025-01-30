@@ -38,7 +38,7 @@ Nous allons créer les ressources suivantes à l'aide de Terraform :
 > Exécution des commandes :
 PROJECT_ID=$(gcloud config get-value project)
 gsutil mb gs://${PROJECT_ID}-tfstate
-voir le fichier google doc
+voir le fichier proof
 
 2. Définir les éléments de base nécessaires à la bonne exécution de terraform : utiliser l'exemple sur le [repo du cours](https://github.com/aballiet/devops-dauphine-2024/tree/main/exemple/cloudbuild-terraform) si besoin pour vous aider
 > Création d'un main.tf pour les éléments nécessaires
@@ -64,7 +64,7 @@ Plan: 8 to add, 0 to change, 0 to destroy.
 Apply complete! Resources: 9 added, 0 changed, 0 destroyed.
 
 5. Vérifier que notre utilisateur existe bien : https://console.cloud.google.com/sql/instances/main-instance/users (veiller à bien séléctionner le projet GCP sur lequel vous avez déployé vos ressources)
-> Un utilisateur word press a été créé, voir le fichier google doc.
+> Un utilisateur word press a été créé, voir le fichier proof.
 
 6. Rendez-vous sur https://console.cloud.google.com/sql/instances/main-instance/databases. Quelles sont les base de données présentes sur votre instance `main-instance` ? Quels sont les types ?
 > On a 4 bases de données et un utilisateur
@@ -74,7 +74,7 @@ performance_schema: Système
 sys: Système		
 wordpress: Utilisateur		
 
-Voir image sur google doc	
+Voir image sur proof	
 
 ## Partie 2 : Docker
 
@@ -83,7 +83,7 @@ Wordpress dispose d'une image Docker officielle disponible sur [DockerHub](https
 1. Récupérer l'image sur votre machine (Cloud Shell)
 > Exécutionn de la commande
 docker pull wordpress
-Voir image sur google doc.
+Voir image sur proof.
 
 
 2. Lancer l'image docker et ouvrez un shell à l'intérieur de votre container:
@@ -124,12 +124,12 @@ ad4
    4. Utilisez l'aperçu web pour afficher le résultat du navigateur qui se connecte à votre container wordpress
       1. Utiliser la fonction `Aperçu sur le web`
         ![web_preview](images/wordpress_preview.png)
-        Voir image sur le fichier google doc
+        Voir image sur le fichier proof
 
       2. Modifier le port si celui choisi n'est pas `8000`
-         Voir image sur le fichier google doc
+         Voir image sur le fichier proof
       3. Une fenètre s'ouvre, que voyez vous ?
-         Voir image sur le fichier google doc
+         Voir image sur le fichier proof
 
 4. A partir de la documentation, remarquez les paramètres requis pour la configuration de la base de données.
 Les paramètre requis pour wp-config.php sont: DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_CHARSET, DB_COLLATE 
@@ -163,7 +163,7 @@ Les paramètre requis pour wp-config.php sont: DB_NAME, DB_USER, DB_PASSWORD, DB
 
 6. Pipeline d'Intégration Continue (CI):
    1. Créer un dépôt de type `DOCKER` sur artifact registry (si pas déjà fait, sinon utiliser celui appelé `website-tools`)
-   Voir image sur le fichier google doc
+   Voir image sur le fichier proof
 
    2. Créer une configuration cloudbuild pour construire l'image docker et la publier sur le depôt Artifact Registry
    Voir le fichier cloudbuild.yaml
@@ -189,11 +189,11 @@ Notre but, ne l'oublions pas est de déployer wordpress sur Cloud Run puis Kuber
 1. Rendez vous sur : https://console.cloud.google.com/sql/instances/main-instance/connections/summary?
    L'instance de base données dispose d'une `Adresse IP publique`. Nous allons nous servir de cette valeur pour configurer notre image docker Wordpress qui s'y connectera.
    > Adresse Ip publique : 34.44.162.209
-   Voir image sur le fichier google doc
+   Voir image sur le fichier proof
 
 2. Reprendre le Dockerfile de la [Partie 2](#partie-2--docker) et le modifier pour que `WORDPRESS_DB_HOST` soit défini avec l'`Adresse IP publique` de notre instance de base de donnée.
 Modification dans le fichier Dockerfile
-Voir image dans le fichier google doc
+Voir image dans le fichier proof
 
 3. Reconstruire notre image docker et la pousser sur notre Artifact Registry en utilisant cloud build
 > Exécution de la commande pour reconstruire l'image : gcloud builds submit --config cloudbuild.yaml .
@@ -231,10 +231,10 @@ Voir image dans le fichier google doc
 
 2. Observer les journaux de Cloud Run (logs) sur : https://console.cloud.google.com/run/detail/us-central1/serveur-wordpress/logs.
    1. Véirifer la présence de l'entrée `No 'wp-config.php' found in /var/www/html, but 'WORDPRESS_...' variables supplied; copying 'wp-config-docker.php' (WORDPRESS_DB_HOST WORDPRESS_DB_PASSWORD WORDPRESS_DB_USER)`
-   Voir le fichier image de google doc
+   Voir le fichier image de proof
    2. Au bout de 5 min, que se passe-t-il ? 🤯🤯🤯
    3. Regarder le resultat de votre commande `terraform apply` et observer les logs de Cloud Run
-   Voir image du fichier google doc
+   Voir image du fichier proof
 
 3. Autoriser toutes les adresses IP à se connecter à notre base MySQL (sous réserve d'avoir l'utilisateur et le mot de passe évidemment)
    1. Pour le faire, exécuter la commande
@@ -252,7 +252,7 @@ Voir image dans le fichier google doc
    1. Aller sur : https://console.cloud.google.com/run/detail/us-central1/serveur-wordpress/metrics?
    2. Cliquer sur l'URL de votre Cloud Run : similaire à https://serveur-wordpress-oreldffftq-uc.a.run.app
    3. Que voyez vous ? 🙈
-   Voir image sur le fichier google doc
+   Voir image sur le fichier proof
    Je vois une page avec un gros message d'erreur.
 
 
@@ -281,8 +281,23 @@ Voir image dans le fichier google doc
    ```
 
    4. Rendez vous sur l'adresse IP publique du service kubernetes Wordpress et vérifiez que Wordpress fonctionne 🔥
+   > Execution de la commande  kubectl get svc --all-namespaces
+   NAMESPACE     NAME                   TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)            AGE
+default       kubernetes             ClusterIP      34.118.224.1     <none>        443/TCP            169m
+default       mysql                  ClusterIP      34.118.232.50    <none>        3306/TCP           3m40s
+default       wordpress              LoadBalancer   34.118.235.216   34.46.94.56   80:31410/TCP       3m40s
+gmp-system    alertmanager           ClusterIP      None             <none>        9093/TCP           168m
+gmp-system    gmp-operator           ClusterIP      34.118.238.78    <none>        8443/TCP,443/TCP   168m
+kube-system   default-http-backend   NodePort       34.118.230.57    <none>        80:32542/TCP       168m
+kube-system   kube-dns               ClusterIP      34.118.224.10    <none>        53/UDP,53/TCP      168m
+kube-system   metrics-server         ClusterIP      34.118.228.141   <none>        443/TCP            168m
 
+> Exécution de la commande 
+kubectl get svc wordpress -n default
+NAME        TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+wordpress   LoadBalancer   34.118.235.216   34.46.94.56   80:31410/TCP   4m32s
 
+> Exécution de la commande
 ## BONUS : Partie 4
 
 1. Utiliser Cloud Build pour appliquer les changements d'infrastructure
